@@ -16,6 +16,10 @@ import { Footer } from './components/layout/Footer';
 import { AlternatingContent } from './components/home/AlternatingContent';
 import { FAQ } from './components/home/FAQ';
 import { Testimonials } from './components/home/Testimonials';
+import { Projects } from './pages/Projects';
+import { Events } from './pages/Events';
+import { Training } from './pages/Training';
+import { About } from './pages/About';
 
 function App() {
   return (
@@ -26,6 +30,10 @@ function App() {
           <Route path="/signin" element={<SignInForm />} />
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/training" element={<Training />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </div>
     </Router>

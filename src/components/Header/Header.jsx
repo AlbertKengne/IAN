@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Logo } from './Logo';
-import { Navigation } from './Navigation';
-import { AuthButtons } from './AuthButtons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '../common/Button';
+import { Logo } from './Logo';
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const location = useLocation();
+
+  const navItems = [
+    { name: 'Accueil', path: '/' },
+    { name: 'Projets', path: '/projects' },
+    { name: 'Événements', path: '/events' },
+    { name: 'Formation', path: '/training' },
+    { name: 'À propos', path: '/about' }
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +46,25 @@ export const Header = () => {
 
           {/* Navigation Desktop */}
           <nav className="hidden md:flex items-center space-x-10">
-            <NavigationLinks isScrolled={isScrolled} />
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`text-gray-300 hover:text-white transition-all duration-300 relative py-2 group ${
+                  location.pathname === item.path ? 'text-white' : ''
+                }`}
+              >
+                {item.name}
+                <motion.span 
+                  className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#eb600e] to-[#ff8f4c] ${
+                    location.pathname === item.path ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: location.pathname === item.path ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </Link>
+            ))}
           </nav>
 
           {/* Auth Buttons */}
@@ -91,7 +117,18 @@ export const Header = () => {
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
         <div className="px-4 pt-2 pb-6 bg-gradient-to-b from-[#0a192f]/95 to-[#0a192f] backdrop-blur-lg space-y-4 shadow-lg">
-          <MobileNavigationLinks />
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`block py-3 px-4 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-lg ${
+                location.pathname === item.path ? 'text-white bg-white/10' : ''
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          ))}
           <div className="flex flex-col space-y-3 pt-4 border-t border-gray-700/50">
             <button className="w-full py-2.5 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-lg">
               Se connecter
@@ -105,38 +142,3 @@ export const Header = () => {
     </header>
   );
 };
-
-const NavigationLinks = ({ isScrolled }) => (
-  <>
-    {['Accueil', 'Projets', 'Événements', 'Formation', 'À propos'].map((item) => (
-      <motion.a
-        key={item}
-        href={`#${item.toLowerCase()}`}
-        className="text-gray-300 hover:text-white transition-all duration-300 relative py-2 group"
-        whileHover={{ y: -2 }}
-      >
-        {item}
-        <motion.span 
-          className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#eb600e] to-[#ff8f4c]"
-          initial={{ scaleX: 0 }}
-          whileHover={{ scaleX: 1 }}
-          transition={{ duration: 0.3 }}
-        />
-      </motion.a>
-    ))}
-  </>
-);
-
-const MobileNavigationLinks = () => (
-  <>
-    {['Accueil', 'Projets', 'Événements', 'Formation', 'À propos'].map((item) => (
-      <a
-        key={item}
-        href={`#${item.toLowerCase()}`}
-        className="block py-3 text-gray-300 hover:text-white transition-all duration-300 hover:bg-white/5 rounded-lg px-4"
-      >
-        {item}
-      </a>
-    ))}
-  </>
-);
